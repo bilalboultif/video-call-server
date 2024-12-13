@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Set Up Your Name</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="setup">
+      <h1>Set Up Your Name</h1>
+      <input type="text" id="nameInput" placeholder="Enter your name" value="<%= name || '' %>" />
+      <button id="saveName">Save Name</button>
+    </div>
+
+    <script>
+      document.getElementById("saveName").addEventListener("click", () => {
+
+
+         // Fetch the client name from localStorage after the page is fully loaded
+        const clientName = localStorage.getItem('username');
+        console.log('Retrieved Client Name:', clientName);  // Debugging
+
+      
+        const name = document.getElementById("nameInput").value.trim();
+        if (name) {
+          localStorage.setItem("username", name);  // Store the name in localStorage
+          window.location.href = '/';  // Redirect back to the main chat page
+        } else {
+          alert("Please enter a valid name.");
+        }
+      });
+    </script>
+  </body>
+</html>
