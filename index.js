@@ -24,18 +24,17 @@ app.use(helmet({
     contentSecurityPolicy: false  // Disable CSP if you're setting your own header
 }));
 
-// Set custom Content-Security-Policy header
 app.use((req, res, next) => {
     res.setHeader('Content-Security-Policy', [
-        "default-src 'self';",
+        "default-src 'self';",  // Allow resources to be loaded from the same origin (self)
         "script-src 'self' 'unsafe-inline' https://kit.fontawesome.com https://cdn.jsdelivr.net https://cdn.socket.io https://unpkg.com;",
         "style-src 'self' 'unsafe-inline' https://kit.fontawesome.com https://fonts.googleapis.com;",
-        "connect-src 'self' wss://my-node-backend-fcdy.onrender.com;",
-        "img-src 'self' data:;",
+        "connect-src 'self' wss://my-node-backend-fcdy.onrender.com;",  // Allow WebSocket connections
+        "img-src 'self' https://my-node-backend-fcdy.onrender.com;",  // Allow images from your own backend
         "font-src 'self' https://kit.fontawesome.com https://fonts.gstatic.com;",
-        "object-src 'none';",
-        "upgrade-insecure-requests;"
-    ].join(' '));  // Joining as a single string with spaces in between
+        "object-src 'none';",  // Disable object sources
+        "upgrade-insecure-requests;"  // Force loading over HTTPS
+    ].join(' '));  // Joining the directives as a single string with spaces in between
     next();
 });
 

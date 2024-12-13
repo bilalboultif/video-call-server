@@ -1,0 +1,46 @@
+name: Deploy Node.js Server to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu image
+    
+    steps:
+      # Check out the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # Choose the Node.js version for your server
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          npm install
+
+      # Build your application (optional, if needed)
+      - name: Build app
+        run: |
+          npm run build  # Optional step if you have a build script
+
+      # SSH into the server and deploy
+      - name: Deploy to DigitalOcean
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.DIGITALOCEAN_HOST }}  # Add your server IP in GitHub Secrets
+          username: ${{ secrets.DIGITALOCEAN_USER }}  # Add your server user in GitHub Secrets
+          key: ${{ secrets.DIGITALOCEAN_SSH_KEY }}  # Add your SSH private key in GitHub Secrets
+          port: 22  # Default SSH port
+          script: |
+            cd /path/to/your/project
+            git pull origin main  # Pull the latest code
+            npm install  # Install dependencies
+            pm2 restart server.js  # Restart your Node.js server with pm2 (or whatever process manager you're using)
+
