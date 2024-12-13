@@ -121,7 +121,7 @@ io.on('connection', (socket) => {
 
 
 // Start the HTTP server
-const PORT = process.env.PORT || 443;  // Default to 443 for local dev or fallback
+const PORT = process.env.PORT || 3000;  // Default to 443 for local dev or fallback
 server.listen(PORT, () => {
-  console.log(`Server running on https://my-node-backend-fcdy.onrender.com`);
+  console.log(`Server running on ${PORT}`);
 });
