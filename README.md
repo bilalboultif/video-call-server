@@ -1,0 +1,1 @@
+this is a video server to handle the conversation between admin and client 
