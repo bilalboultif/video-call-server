@@ -1,4 +1,4 @@
-const socket = io("https://my-node-backend-fcdy.onrender.com");  // Replace with your deployed WebSocket server URL
+const socket = io("https://video-call-server-production.up.railway.app");  // Replace with your deployed WebSocket server URL
 
 const videoGrid = document.getElementById("video-grid");
 const myVideo = document.createElement("video");
@@ -33,7 +33,7 @@ showChat.addEventListener("click", () => {
 });
 
 var peer = new Peer({
-  host: 'my-node-backend-fcdy.onrender.com',
+  host: 'video-call-server-production.up.railway.app',
   port: 443,
   path: '/peerjs',
   secure: true,
