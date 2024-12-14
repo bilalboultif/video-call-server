@@ -32,6 +32,7 @@ showChat.addEventListener("click", () => {
   document.querySelector(".header__back").style.display = "block";
 });
 
+// Initialize PeerJS with STUN/TURN servers
 var peer = new Peer({
   host: 'video-call-server-production.up.railway.app',
   port: 443,
@@ -91,12 +92,22 @@ navigator.mediaDevices
     console.log("Error accessing media devices:", err);
   });
 
+// Function to handle new user connections
 const connectToNewUser = (userId, stream) => {
   console.log('I am calling user ' + userId);
   const call = peer.call(userId, stream);
   const video = document.createElement("video");
   call.on("stream", (userVideoStream) => {
     addVideoStream(video, userVideoStream);  // Add video stream to the grid
+  });
+
+  call.on("close", () => {
+    video.remove();  // Remove the video element if the call is closed
+  });
+
+  // Handle call errors
+  call.on("error", (err) => {
+    console.log("Error during call: ", err);
   });
 };
 
@@ -115,6 +126,7 @@ window.onload = () => {
   });
 };
 
+// Function to add the video stream to the video grid
 const addVideoStream = (video, stream) => {
   video.srcObject = stream;
   video.addEventListener("loadedmetadata", () => {
