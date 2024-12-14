@@ -39,8 +39,7 @@ var peer = new Peer({
   secure: true,
   debug: 3,
   config: {
-    iceServers: [
-      // Existing STUN servers
+    'iceServers': [
       { url: 'stun:stun01.sipphone.com' },
       { url: 'stun:stun.ekiga.net' },
       { url: 'stun:stunserver.org' },
@@ -50,12 +49,6 @@ var peer = new Peer({
       { url: 'stun:stun.voipstunt.com' },
       { url: 'stun:stun.voxgratia.org' },
       { url: 'stun:stun.xten.com' },
-      { urls: 'stun:stun.l.google.com:19302' },
-      { urls: 'stun:stun1.l.google.com:19302' },
-      { urls: 'stun:stun2.l.google.com:19302' },
-      { urls: 'stun:stun3.l.google.com:19302' },
-
-      // Existing TURN server (if you're still using it)
       {
         url: 'turn:192.158.29.39:3478?transport=udp',
         credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
@@ -65,19 +58,10 @@ var peer = new Peer({
         url: 'turn:192.158.29.39:3478?transport=tcp',
         credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
         username: '28224511:1379330808'
-      },
-
-      // Add Daily.co TURN server details
-      {
-        urls: 'turn:turn.daily.co:3478'  // Daily.co's TURN server URL
-      },
-      {
-        urls: 'turn:turn.daily.co:3478',  // TURN server URL for TCP transport as well
       }
     ]
   }
 });
-
 
 // Getting user media for video and audio
 let myVideoStream;
@@ -90,15 +74,15 @@ navigator.mediaDevices
     myVideoStream = stream;
     addVideoStream(myVideo, stream);
 
-    peer.on('call', (call) => {
-      console.log('Receiving call from:', call.peer);
-      call.answer(myVideoStream);  // Answer the call with your local stream
-    
-      const video = document.createElement('video');
-      call.on('stream', (userVideoStream) => {
-        addVideoStream(video, userVideoStream);
-      });
-    });
+   peer.on('call', (call) => {
+  console.log('Receiving call from:', call.peer);
+  call.answer(myVideoStream);  // Answer the call with your local stream
+
+  const video = document.createElement('video');
+  call.on('stream', (userVideoStream) => {
+    addVideoStream(video, userVideoStream);
+  });
+});
     
     // Listen for new users connecting
     socket.on("user-connected", (userId) => {
