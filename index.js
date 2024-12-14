@@ -13,7 +13,7 @@ app.set("view engine", "ejs");
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: ['https://localhost', 'video-call-server-production.up.railway.app', 'https://family-tracker-dun.vercel.app'],
+    origin: ['https://localhost', 'https://video-call-server-production.up.railway.app', 'https://family-tracker-dun.vercel.app'],
     methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Custom-Header'],
     credentials: true
@@ -24,13 +24,13 @@ app.use(helmet({
     contentSecurityPolicy: false  // Disable CSP if you're setting your own header
 }));
 
-app.use((req, res, next) => { 
+app.use((req, res, next) => {
     res.setHeader('Content-Security-Policy', [
         "default-src 'self';",  // Allow resources to be loaded from the same origin (self)
         "script-src 'self' 'unsafe-inline' https://kit.fontawesome.com https://cdn.jsdelivr.net https://cdn.socket.io https://unpkg.com;",
         "style-src 'self' 'unsafe-inline' https://kit.fontawesome.com https://fonts.googleapis.com;",
         "connect-src 'self' wss://my-node-backend-fcdy.onrender.com;",  // Allow WebSocket connections
-        "img-src 'self' video-call-server-production.up.railway.app;",  // Allow images from your own backend and self
+        "img-src 'self' https://video-call-server-production.up.railway.app;",  // Allow images from your own backend and self
         "font-src 'self' https://kit.fontawesome.com https://fonts.gstatic.com;",
         "object-src 'none';",  // Disable object sources
         "upgrade-insecure-requests;",  // Force loading over HTTPS
@@ -53,7 +53,7 @@ const server = http.createServer(app);  // Use http.createServer instead of http
 // Setting up socket.io for HTTP
 const io = socketIo(server, {
     cors: {
-        origin: ['https://location-five-psi.vercel.app','video-call-server-production.up.railway.app','https://family-tracker-dun.vercel.app', 'http://localhost:3000','http://127.0.0.1:5501', 'http://127.0.0.1:5502', 'https://172.23.249.39:5000', 'http://127.0.0.1:5500', 'http://localhost:10000'],  // List of allowed origins
+        origin: ['https://location-five-psi.vercel.app','https://video-call-server-production.up.railway.app','https://family-tracker-dun.vercel.app', 'http://localhost:3000','http://127.0.0.1:5501', 'http://127.0.0.1:5502', 'https://172.23.249.39:5000', 'http://127.0.0.1:5500', 'http://localhost:10000'],  // List of allowed origins
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true,  // Allow cookies and credentials
@@ -124,11 +124,7 @@ io.on('connection', (socket) => {
 
 
 // Start the HTTP server
-const PORT = process.env.PORT || 3000;  // Default to 443 for local dev or fallback
+const PORT = process.env.PORT || 443;  // Default to 443 for local dev or fallback
 server.listen(PORT, () => {
-<<<<<<< HEAD
-  console.log(`Server running on video-call-server-production.up.railway.app`);
-=======
-  console.log(`Server running on ${PORT}`);
->>>>>>> 5b8a90fa4adbc10f81bbfc1b01922bd554a1148f
+  console.log(`Server running on https://video-call-server-production.up.railway.app`);
 });
