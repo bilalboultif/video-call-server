@@ -82,40 +82,42 @@ app.get("/:room", (req, res) => {
   });
 
 
-
+// Socket.io handling user connections
 io.on('connection', (socket) => {
-    console.log('Socket ID:', socket.id);
-    console.log('Rooms:', socket.rooms);  // This will show which rooms the socket is part of
-
+  console.log('Socket ID:', socket.id);
 
   // User joins a room
   socket.on("join-room", (roomId, userId, userName) => {
-    // Ensure the client joins the room
     socket.join(roomId);
     console.log(`${userName} joined room ${roomId}`);
 
-    // Immediately broadcast user-connected event after joining the room
-    if (socket.rooms.has(roomId)) {
-        // Send to all clients in the room except the sender
-        socket.broadcast.to(roomId).emit("user-connected", userId);
-        console.log(`User ${userId} connected to room ${roomId}`);
-    } else {
-        console.log(`Socket not in room ${roomId} when trying to broadcast user-connected.`);
-    }
+    // Notify others that a new user has joined
+    socket.broadcast.to(roomId).emit("user-connected", userId);
 
-    // Handle messaging
+    // Handle messages (text chat)
     socket.on("message", (message) => {
-        io.to(roomId).emit("createMessage", message, userName);
+      io.to(roomId).emit("createMessage", message, userName);
+    });
+
+    // WebRTC signaling
+    socket.on("offer", (offer, roomId, userId) => {
+      socket.broadcast.to(roomId).emit("offer", offer, userId);
+    });
+
+    socket.on("answer", (answer, roomId, userId) => {
+      socket.broadcast.to(roomId).emit("answer", answer, userId);
+    });
+
+    socket.on("ice-candidate", (candidate, roomId, userId) => {
+      socket.broadcast.to(roomId).emit("ice-candidate", candidate, userId);
     });
 
     // Handle user disconnecting
     socket.on("disconnect", () => {
-        socket.broadcast.to(roomId).emit("user-disconnected", userId);
-        console.log(`User ${userId} disconnected from room ${roomId}`);
+      socket.broadcast.to(roomId).emit("user-disconnected", userId);
+      console.log(`User ${userId} disconnected from room ${roomId}`);
     });
-});
-
-
+  });
 });
 
 
