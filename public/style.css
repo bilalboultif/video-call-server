@@ -11,11 +11,6 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: "Poppins", sans-serif;
 }
 
 .header {
@@ -55,14 +50,13 @@ body {
 
 video {
   height: 300px;
-  width: 400px;
   border-radius: 1rem;
   margin: 0.5rem;
+  width: 400px;
   object-fit: cover;
-}
-
-video.local {
-  transform: rotateY(180deg); /* Apply only to local video */
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
 }
 
 .options {
@@ -71,8 +65,7 @@ video.local {
   background-color: var(--main-darklg);
 }
 
-.options__left,
-.options__right {
+.options__left {
   display: flex;
 }
 
@@ -91,12 +84,6 @@ video.local {
   font-size: 1.2rem;
   width: 50px;
   margin: 0 0.5rem;
-  transition: background-color 0.3s ease;
-}
-
-.options__button:hover {
-  background-color: #1d2635;
-  cursor: pointer;
 }
 
 .background__red {
@@ -113,20 +100,10 @@ video.local {
 .main__chat_window {
   flex-grow: 1;
   overflow-y: scroll;
-  padding: 1rem;
 }
 
 .main__chat_window::-webkit-scrollbar {
-  width: 8px;
-}
-
-.main__chat_window::-webkit-scrollbar-thumb {
-  background-color: #888;
-  border-radius: 4px;
-}
-
-.main__chat_window::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
+  display: none;
 }
 
 .main__message_container {
@@ -179,7 +156,6 @@ video.local {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 1rem; /* Add gap between video elements */
 }
 
 #showChat {
@@ -195,6 +171,25 @@ video.local {
   color: #fff;
 }
 
+@media (max-width: 700px) {
+  .main__right {
+    display: none;
+  }
+  .main__left {
+    width: 100%;
+    flex: 1;
+  }
+
+  video {
+    height: auto;
+    width: 100%;
+  }
+
+  #showChat {
+    display: flex;
+  }
+}
+
 .header__back {
   cursor: pointer;
   padding: 10px;
@@ -205,51 +200,4 @@ video.local {
 
 .header__back:hover {
   color: #007bff; /* Change color on hover */
-}
-
-@media (max-width: 700px) {
-  .main__right {
-    display: none;
-  }
-  .main__left {
-    width: 100%;
-    flex: 1;
-  }
-
-  .videos__group {
-    padding: 0.5rem; /* Reduce padding on small screens */
-  }
-
-  .main__chat_window {
-    padding: 1rem;
-  }
-
-  video {
-    height: auto;
-    width: 100%;
-  }
-
-  .options__left,
-  .options__right {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .options__button {
-    width: 60px;
-    height: 40px;
-    font-size: 1rem;
-  }
-
-  .messages {
-    margin: 1rem 0;
-  }
-
-  #showChat {
-    display: flex;
-  }
-
-  .header__back {
-    display: inline-block;
-  }
 }

@@ -32,7 +32,6 @@ showChat.addEventListener("click", () => {
   document.querySelector(".header__back").style.display = "block";
 });
 
-// Initialize PeerJS with STUN/TURN servers
 var peer = new Peer({
   host: 'video-call-server-production.up.railway.app',
   port: 443,
@@ -40,7 +39,8 @@ var peer = new Peer({
   secure: true,
   debug: 3,
   config: {
-    'iceServers': [
+    iceServers: [
+      // Existing STUN servers
       { url: 'stun:stun01.sipphone.com' },
       { url: 'stun:stun.ekiga.net' },
       { url: 'stun:stunserver.org' },
@@ -50,6 +50,12 @@ var peer = new Peer({
       { url: 'stun:stun.voipstunt.com' },
       { url: 'stun:stun.voxgratia.org' },
       { url: 'stun:stun.xten.com' },
+      { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'stun:stun1.l.google.com:19302' },
+      { urls: 'stun:stun2.l.google.com:19302' },
+      { urls: 'stun:stun3.l.google.com:19302' },
+
+      // Existing TURN server (if you're still using it)
       {
         url: 'turn:192.158.29.39:3478?transport=udp',
         credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
@@ -59,10 +65,19 @@ var peer = new Peer({
         url: 'turn:192.158.29.39:3478?transport=tcp',
         credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
         username: '28224511:1379330808'
+      },
+
+      // Add Daily.co TURN server details
+      {
+        urls: 'turn:turn.daily.co:3478'  // Daily.co's TURN server URL
+      },
+      {
+        urls: 'turn:turn.daily.co:3478',  // TURN server URL for TCP transport as well
       }
     ]
   }
 });
+
 
 // Getting user media for video and audio
 let myVideoStream;
@@ -75,11 +90,13 @@ navigator.mediaDevices
     myVideoStream = stream;
     addVideoStream(myVideo, stream);
 
-    peer.on("call", (call) => {
+    peer.on('call', (call) => {
+      console.log('Receiving call from:', call.peer);
       call.answer(myVideoStream);  // Answer the call with your local stream
-      const video = document.createElement("video");
-      call.on("stream", (userVideoStream) => {
-        addVideoStream(video, userVideoStream);  // Add video stream to the grid
+    
+      const video = document.createElement('video');
+      call.on('stream', (userVideoStream) => {
+        addVideoStream(video, userVideoStream);
       });
     });
     
@@ -92,22 +109,12 @@ navigator.mediaDevices
     console.log("Error accessing media devices:", err);
   });
 
-// Function to handle new user connections
 const connectToNewUser = (userId, stream) => {
   console.log('I am calling user ' + userId);
   const call = peer.call(userId, stream);
   const video = document.createElement("video");
   call.on("stream", (userVideoStream) => {
     addVideoStream(video, userVideoStream);  // Add video stream to the grid
-  });
-
-  call.on("close", () => {
-    video.remove();  // Remove the video element if the call is closed
-  });
-
-  // Handle call errors
-  call.on("error", (err) => {
-    console.log("Error during call: ", err);
   });
 };
 
@@ -126,7 +133,6 @@ window.onload = () => {
   });
 };
 
-// Function to add the video stream to the video grid
 const addVideoStream = (video, stream) => {
   video.srcObject = stream;
   video.addEventListener("loadedmetadata", () => {

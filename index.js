@@ -88,32 +88,25 @@ io.on('connection', (socket) => {
     console.log('Rooms:', socket.rooms);  // This will show which rooms the socket is part of
 
 
-  // User joins a room
-  socket.on("join-room", (roomId, userId, userName) => {
-    // Ensure the client joins the room
-    socket.join(roomId);
-    console.log(`${userName} joined room ${roomId}`);
-
-    // Immediately broadcast user-connected event after joining the room
-    if (socket.rooms.has(roomId)) {
-        // Send to all clients in the room except the sender
-        socket.broadcast.to(roomId).emit("user-connected", userId);
-        console.log(`User ${userId} connected to room ${roomId}`);
-    } else {
-        console.log(`Socket not in room ${roomId} when trying to broadcast user-connected.`);
-    }
-
-    // Handle messaging
-    socket.on("message", (message) => {
-        io.to(roomId).emit("createMessage", message, userName);
-    });
-
-    // Handle user disconnecting
-    socket.on("disconnect", () => {
-        socket.broadcast.to(roomId).emit("user-disconnected", userId);
-        console.log(`User ${userId} disconnected from room ${roomId}`);
-    });
-});
+    socket.on('join-room', (roomId, peerId, username) => {
+        if (!rooms[roomId]) {
+          rooms[roomId] = [];
+        }
+        rooms[roomId].push({ peerId, username });
+        socket.join(roomId);  // Join the room in Socket.io
+    
+        // Notify other users in the room that a new user has joined
+        socket.to(roomId).emit('user-connected', peerId, username);
+    
+        // Emit the list of users already in the room when a new user joins
+        socket.emit('existing-users', rooms[roomId]);
+    
+        // Handle disconnection
+        socket.on('disconnect', () => {
+          rooms[roomId] = rooms[roomId].filter(user => user.peerId !== peerId);
+          socket.to(roomId).emit('user-disconnected', peerId);
+        });
+      });
 
 
 });
