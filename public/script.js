@@ -58,7 +58,20 @@ var peer = new Peer({
         url: 'turn:192.158.29.39:3478?transport=tcp',
         credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
         username: '28224511:1379330808'
-      }
+      },
+      {
+    urls: 'turn:global.turn.twilio.com:3478?transport=udp', // Twilio TURN server (UDP)
+    username: 'user1',  // Identity or username for TURN server (usually user identity)
+    credential: process.env.USE_TOKEN,  // Twilio Access Token (credential)
+  },
+  {
+    urls: 'turn:global.turn.twilio.com:3478?transport=tcp', // Twilio TURN server (TCP)
+    username: 'user1',  // Identity or username for TURN server
+    credential: process.env.USE_TOKEN,  // Twilio Access Token (credential)
+  },
+  // You can still add public STUN servers if needed for better NAT traversal
+  { urls: 'stun:stun.l.google.com:19302' },
+  { urls: 'stun:stun1.l.google.com:19302' },
     ]
   }
 });
