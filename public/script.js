@@ -87,6 +87,54 @@ var peer = new Peer({
   }
 });
 
+// Request permissions for Camera and Microphone using Cordova
+document.addEventListener('deviceready', function() {
+  // Request camera permission
+  cordova.plugins.permissions.requestPermission(cordova.plugins.permissions.CAMERA, function(status) {
+    if (status.hasPermission) {
+      console.log('Camera permission granted');
+      // Proceed to get media
+      getUserMedia();
+    } else {
+      alert("Camera permission denied. Cannot proceed with video.");
+    }
+  });
+
+  // Request microphone permission
+  cordova.plugins.permissions.requestPermission(cordova.plugins.permissions.RECORD_AUDIO, function(status) {
+    if (status.hasPermission) {
+      console.log('Microphone permission granted');
+    } else {
+      alert("Microphone permission denied.");
+    }
+  });
+});
+
+// Use getUserMedia to access the camera and microphone
+function getUserMedia() {
+  navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+    .then(stream => {
+      myVideoStream = stream;
+      addVideoStream(myVideo, stream);
+
+      peer.on('call', (call) => {
+        console.log('Receiving call from:', call.peer);
+        call.answer(myVideoStream);  // Answer the call with your local stream
+
+        const video = document.createElement('video');
+        call.on('stream', (userVideoStream) => {
+          addVideoStream(video, userVideoStream);
+        });
+      });
+
+      socket.on("user-connected", (userId) => {
+        connectToNewUser(userId, myVideoStream);  // Connect to the new user
+      });
+    })
+    .catch((err) => {
+      console.error("Error accessing media devices:", err);
+    });
+}
 // Getting user media for video and audio
 let myVideoStream;
 navigator.mediaDevices
