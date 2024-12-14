@@ -4,8 +4,12 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f0f0f0;
+  height: 100vh; /* Ensure full viewport height */
+  display: flex;
+  flex-direction: column; /* Stack header, main, and input vertically */
 }
 
+/* Header section */
 .header {
   background-color: #4CAF50;
   padding: 10px 20px;
@@ -18,11 +22,15 @@ body {
   font-size: 24px;
 }
 
-/* Main chat area */
+/* Main content area */
 .main {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
   padding: 20px;
+  background-color: #fff;
+  height: 100%;
 }
 
 /* Left side (video & options) - Hidden */
@@ -38,9 +46,8 @@ body {
 .main__right {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
+  justify-content: space-between; /* Ensure input stays at the bottom */
+  flex-grow: 1; /* Make it take all available space */
 }
 
 /* Chat window */
@@ -56,26 +63,18 @@ body {
 
 /* Messages styling */
 .messages {
-  max-height: 200px;
+  max-height: 300px;
   overflow-y: auto;
-}
-
-.message {
-  padding: 5px;
-  margin-bottom: 10px;
-  background-color: #f1f1f1;
-  border-radius: 5px;
-  font-size: 14px;
-}
-
-.message b {
-  color: #4CAF50;
+  margin-bottom: 10px; /* Add space between messages and input */
 }
 
 /* Input and send button styling */
 .main__message_container {
   display: flex;
   justify-content: space-between;
+  padding: 10px;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
 }
 
 #chat_message {
