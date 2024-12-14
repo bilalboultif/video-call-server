@@ -14,10 +14,12 @@ socket.on('connect', () => {
   console.log('Connected to server');
 });
 
+// Listen for incoming messages
 socket.on('message', (message) => {
   console.log('New message: ', message);
 });
 
+// Back button functionality (shows the video call grid and hides chat)
 backBtn.addEventListener("click", () => {
   document.querySelector(".main__left").style.display = "flex";
   document.querySelector(".main__left").style.flex = "1";
@@ -25,6 +27,7 @@ backBtn.addEventListener("click", () => {
   document.querySelector(".header__back").style.display = "none";
 });
 
+// Show chat functionality
 showChat.addEventListener("click", () => {
   document.querySelector(".main__right").style.display = "flex";
   document.querySelector(".main__right").style.flex = "1";
@@ -32,6 +35,7 @@ showChat.addEventListener("click", () => {
   document.querySelector(".header__back").style.display = "block";
 });
 
+// PeerJS setup
 var peer = new Peer({
   host: 'video-call-server-production.up.railway.app',
   port: 443,
@@ -68,7 +72,7 @@ var peer = new Peer({
   }
 });
 
-// Request permissions for Camera and Microphone using Cordova
+// Cordova device ready event to request permissions for camera and microphone
 document.addEventListener('deviceready', function() {
   // Request camera permission
   cordova.plugins.permissions.requestPermission(cordova.plugins.permissions.CAMERA, function(status) {
@@ -91,7 +95,7 @@ document.addEventListener('deviceready', function() {
   });
 });
 
-// Use getUserMedia to access the camera and microphone
+// Function to get user media (audio/video)
 function getUserMedia() {
   navigator.mediaDevices.getUserMedia({ audio: true, video: true })
     .then(stream => {
@@ -108,6 +112,7 @@ function getUserMedia() {
         });
       });
 
+      // Listen for new users connecting
       socket.on("user-connected", (userId) => {
         connectToNewUser(userId, myVideoStream);  // Connect to the new user
       });
@@ -117,7 +122,7 @@ function getUserMedia() {
     });
 }
 
-// Getting user media for video and audio
+// Get the user media stream (audio and video)
 let myVideoStream;
 navigator.mediaDevices
   .getUserMedia({
@@ -147,6 +152,7 @@ navigator.mediaDevices
     console.log("Error accessing media devices:", err);
   });
 
+// Function to connect to new users when they join
 const connectToNewUser = (userId, stream) => {
   console.log('I am calling user ' + userId);
   const call = peer.call(userId, stream);
@@ -171,6 +177,7 @@ window.onload = () => {
   });
 };
 
+// Add video stream to the grid
 const addVideoStream = (video, stream) => {
   video.srcObject = stream;
   video.addEventListener("loadedmetadata", () => {
