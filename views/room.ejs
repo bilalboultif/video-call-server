@@ -9,8 +9,8 @@
     <script src="https://kit.fontawesome.com/c939d0e917.js"></script>
     <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
     <!-- Include socket.io-client from CDN -->
-<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
-<script src="cordova.js"></script> <!-- Cordova script for mobile devices -->
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+    <script src="cordova.js"></script> <!-- Cordova script for mobile devices -->
     <script>
       // Dynamically set ROOM_ID and BASE_URL
       const ROOM_ID = "<%= roomId %>";  // Room ID passed from the server
@@ -29,6 +29,7 @@
     <div class="main">
       <div class="main__left">
         <div class="videos__group">
+          <!-- Container for local and remote videos -->
           <div id="video-grid"></div>
         </div>
         <div class="options">
@@ -63,13 +64,14 @@
         </div>
       </div>
     </div>
-  </body>
 
-  <script src="script.js"></script>
-  <script>
-    // Function to handle the "Back" button click
-    function goBack() {
-      window.history.back();  // This takes the user to the previous page in the browser's history
-    }
-  </script>
+    <script src="script.js"></script>
+
+    <script>
+      // Function to handle the "Back" button click
+      function goBack() {
+        window.history.back();  // This takes the user to the previous page in the browser's history
+      }
+    </script>
+  </body>
 </html>
