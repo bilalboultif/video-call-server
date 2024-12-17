@@ -84,7 +84,38 @@ app.get("/:room", (req, res) => {
 
 // Socket.io handling user connections
 io.on('connection', (socket) => {
-  console.log('Socket ID:', socket.id);
+  console.log('New user connected:', socket.id);
+
+    socket.emit('me', socket.id); // Send back the unique socket ID to the client
+  
+    // Handle call requests
+    socket.on('callUser', (data) => {
+        io.to(data.userToCall).emit('callUser', {
+          signal: data.signalData,
+          from: data.from,
+          name: data.name  // Send the name to the other user
+        });
+      });
+      
+  
+    // Handle answer to a call
+    socket.on('answerCall', (data) => {
+      io.to(data.to).emit('callAccepted', data.signal);
+    });
+  
+    // Handle call end
+  // On server-side, listen for 'callEnded' and notify both users
+socket.on('callEnded', (data) => {
+    socket.to(data.to).emit('callEnded'); // Notify the other user
+  });
+  
+    // User joins a room
+  
+
+    // Handle user disconnecting
+     socket.on('disconnect', () => {
+    console.log('A user disconnected: ', socket.id);
+  });
 
   // User joins a room
   socket.on("join-room", (roomId, userId, userName) => {
