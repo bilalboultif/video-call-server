@@ -13,7 +13,7 @@ app.set("view engine", "ejs");
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: ['https://localhost', 'https://video-call-server-production.up.railway.app', 'https://family-tracker-dun.vercel.app'],
+    origin: ['https://localhost', 'https://video-call-server-production.up.railway.app', 'https://family-tracker-dun.vercel.app','http://127.0.0.1:5503'],
     methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Custom-Header'],
     credentials: true
@@ -53,7 +53,7 @@ const server = http.createServer(app);  // Use http.createServer instead of http
 // Setting up socket.io for HTTP
 const io = socketIo(server, {
     cors: {
-        origin: ['https://location-five-psi.vercel.app','https://video-call-server-production.up.railway.app','https://family-tracker-dun.vercel.app', 'http://localhost:3000','http://127.0.0.1:5501', 'http://127.0.0.1:5502', 'https://172.23.249.39:5000', 'http://127.0.0.1:5500', 'http://localhost:10000'],  // List of allowed origins
+        origin: ['https://location-five-psi.vercel.app','https://video-call-server-production.up.railway.app','https://family-tracker-dun.vercel.app','http://127.0.0.1:5503', 'http://localhost:3000','http://127.0.0.1:5501', 'http://127.0.0.1:5502', 'https://172.23.249.39:5000', 'http://127.0.0.1:5500', 'http://localhost:10000'],  // List of allowed origins
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true,  // Allow cookies and credentials
